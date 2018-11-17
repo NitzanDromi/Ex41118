@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     EditText etfirst;
     EditText etdm;
     LinearLayout mydialog;
-    int type=500;
     double first;
     double dom;
     TextView tvX, tvN, tvD, tvS;
@@ -87,22 +86,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 dialogInterface.cancel();
             }
         });
-        adb.setPositiveButton("Calculate", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int j) {
-                first=Double.parseDouble(String.valueOf(etfirst));
-                dom=Double.parseDouble(String.valueOf(etdm));
-                Toast.makeText(MainActivity.this, ""+j, Toast.LENGTH_LONG).show();
-                if ((etfirst.getText().toString().equals(""))||(etfirst.getText().toString().equals(".-"))||((etfirst.getText().toString().equals("."))||(etfirst.getText().toString().equals("-"))||(etfirst.getText().toString().equals("-.")))||
-                        ((etdm.getText().toString().equals("")) ||(etdm.getText().toString().equals(".-"))||((etdm.getText().toString().equals("."))||(etdm.getText().toString().equals("-"))||(etdm.getText().toString().equals("-."))))){
-                    Toast.makeText(MainActivity.this, "Input is unavailable", Toast.LENGTH_SHORT).show();
-                }
-                else {
+        adb.setPositiveButton("Calculate", myclick);
 
+        AlertDialog ad=adb.create();
+        ad.show();
+    }
+
+
+    DialogInterface.OnClickListener myclick=new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int which) {
+
+                if ((etfirst.getText().toString().equals("")) || (etfirst.getText().toString().equals(".-")) || ((etfirst.getText().toString().equals(".")) || (etfirst.getText().toString().equals("-")) || (etfirst.getText().toString().equals("-."))) ||
+                        ((etdm.getText().toString().equals("")) || (etdm.getText().toString().equals(".-")) || ((etdm.getText().toString().equals(".")) || (etdm.getText().toString().equals("-")) || (etdm.getText().toString().equals("-."))))) {
+                    dialogInterface.cancel();
+                    Toast.makeText(MainActivity.this, "Input is unavailable", Toast.LENGTH_SHORT).show();
+                } else {
+                    first = Double.parseDouble(etfirst.getText().toString());
+                    dom = Double.parseDouble(etdm.getText().toString());
                     tvX.setText(Double.toString(first));
                     tvD.setText(Double.toString(dom));
                     series[0] = Double.toString(first);
-                    if(sw.isChecked())
+                    if (sw.isChecked())
                         //  handasi
                         for (int i = 1; i < 20; i++) {
                             series[i] = Double.toString(Double.parseDouble(series[i - 1]) * dom);
@@ -119,26 +124,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     lv.setAdapter(adp);
                 }
 
-            }
-        });
-
-        AlertDialog ad=adb.create();
-        ad.show();
-    }
-
-    DialogInterface.OnClickListener myclick= new DialogInterface.OnClickListener() {
-        @Override
-            public void onClick(DialogInterface dialogInterface, int j) {
-
         }
-
     };
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         int n=i+1;
         tvN.setText(Integer.toString(n)); double sum;
-        if (type==1)
+        if (!sw.isChecked())
             sum=((n*((2*first)+dom*(n-1)))/2);
         else{ if ((first!=0)||(dom!=0)||(dom!=1))
             sum=(first*(Math.pow(dom,n)-1))/(dom-1);
